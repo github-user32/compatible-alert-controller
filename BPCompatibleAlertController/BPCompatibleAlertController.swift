@@ -26,13 +26,28 @@ private class BPAlertView : UIAlertView {
         super.init(frame: frame)
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
-    init(title: String?, message: String?, delegate: BPCompatibleAlertController, cancelButtonTitle: String?) {
+    convenience init(title: String?, message: String?, delegate: BPCompatibleAlertController, cancelButtonTitle: String?) {
+        // Xcode 7b4 won't let us call the superclass convenience initializer:
+        //    super.init(title: title, message: message, delegate: delegate, cancelButtonTitle: cancelButtonTitle)
+        self.init(frame: CGRectZero)
+        
+        if (title != nil)
+        {
+            self.title = title!
+        }
+        self.message = message
+        self.delegate = delegate
+        
+        if (cancelButtonTitle != nil)
+        {
+            self.cancelButtonIndex = self.addButtonWithTitle(cancelButtonTitle!)
+        }
+        
         delegateReference = delegate
-        super.init(title: title, message: message, delegate: delegate, cancelButtonTitle: cancelButtonTitle)
     }
 }
 
@@ -72,12 +87,18 @@ public class BPCompatibleAlertController : NSObject, UIAlertViewDelegate {
     */
     public var releaseResourcesWhenAlertDismissed: Bool = true
     
-    private var alertController: UIAlertController!
+    /**
+        This should really be an @available(iOS 8.0, *) UIAlertController, but we can't as it gives a "Stored properties cannot be marked potentially unavailable with 'introduced='" compiler error in Xcode 7b4
+    */
+    private var alertController: UIViewController!
+    
     private var alertView: BPAlertView!
     private var actions: [String : BPCompatibleAlertAction]
     private var actionObservers: [NSObjectProtocol] = []
     public var resourcesHaveBeenReleased: Bool = false
     private var textFieldConfigurations: [BPCompatibleTextFieldConfigruationHandler]
+    
+    @available(iOS 8.0, *)
     private var alertControllerStyle: UIAlertControllerStyle {
         get {
             return alertStyle == BPCompatibleAlertControllerStyle.Actionsheet
@@ -145,13 +166,13 @@ public class BPCompatibleAlertController : NSObject, UIAlertViewDelegate {
         // listen to changes on the BPCompatibleAlertAction enabled field to update the UIAlertAction in the alertController
         let observerObject = NSNotificationCenter.defaultCenter().addObserverForName(BPCompatibleAlertActionEnabledDidChangeNotification, object: action, queue: NSOperationQueue.mainQueue()) { (notification) in
             if self.uiAlertControllerAvailable {
-            
-                for a in self.alertController.actions {
-                    if a.title == action.title {
-                        if let internalAction = a as? UIAlertAction {
-                            internalAction.enabled = action.enabled
+                if #available(iOS 8.0, *) {
+                    let uiAlertController = self.alertController as! UIAlertController
+                    for a in uiAlertController.actions {
+                        if a.title == action.title {
+                            a.enabled = action.enabled
+                            break
                         }
-                        break
                     }
                 }
             }
@@ -175,29 +196,32 @@ public class BPCompatibleAlertController : NSObject, UIAlertViewDelegate {
         assert(resourcesHaveBeenReleased == false, "You cannot present an alert controller again after its resources have been released!")
         
         if uiAlertControllerAvailable {
-            alertController = UIAlertController(title: title, message: message, preferredStyle: alertControllerStyle)
-            for action in actions.values {
-                
-                let uiAlertAction = UIAlertAction(title: action.title!, style: action.alertActionStyle, handler: { (alertAction) in
-                    if let handler = action.handler {
-                        handler(action)
-                    }
+            if #available(iOS 8.0, *) {
+                let uiAlertController = UIAlertController(title: title, message: message, preferredStyle: alertControllerStyle)
+                alertController = uiAlertController
+                for action in actions.values {
                     
-                    self.postAlertDismissalActions()
-                })
-                uiAlertAction.enabled = action.enabled
-                alertController.addAction(uiAlertAction)
-            }
-            
-            for textFieldHandler in textFieldConfigurations {
-                alertController.addTextFieldWithConfigurationHandler(textFieldHandler)
-            }
-            
-            viewController.presentViewController(alertController, animated: animated, completion: { () in
-                if let completionHandler = completion {
-                    completionHandler()
+                    let uiAlertAction = UIAlertAction(title: action.title!, style: action.alertActionStyle, handler: { (alertAction) in
+                        if let handler = action.handler {
+                            handler(action)
+                        }
+                        
+                        self.postAlertDismissalActions()
+                    })
+                    uiAlertAction.enabled = action.enabled
+                    uiAlertController.addAction(uiAlertAction)
                 }
-            })
+                
+                for textFieldHandler in textFieldConfigurations {
+                    uiAlertController.addTextFieldWithConfigurationHandler(textFieldHandler)
+                }
+                
+                viewController.presentViewController(alertController, animated: animated, completion: { () in
+                    if let completionHandler = completion {
+                        completionHandler()
+                    }
+                })
+            }
         } else {
             var actionsCopy:[String : BPCompatibleAlertAction] = actions
             var cancelAction: BPCompatibleAlertAction?
@@ -218,12 +242,12 @@ public class BPCompatibleAlertController : NSObject, UIAlertViewDelegate {
             
             alertView.alertViewStyle = alertViewStyle
             
-            for (index, config) in enumerate(textFieldConfigurations) {
+            for (index, config) in textFieldConfigurations.enumerate() {
                 let textField = alertView.textFieldAtIndex(index) as UITextField!
                 config(textField)
             }
             
-            for (title, action) in actionsCopy {
+            for (title, _) in actionsCopy {
                 alertView.addButtonWithTitle(title)
             }
             
@@ -243,9 +267,12 @@ public class BPCompatibleAlertController : NSObject, UIAlertViewDelegate {
     
     public func textFieldAtIndex(index: Int) -> UITextField? {
         if uiAlertControllerAvailable {
-            if alertController.textFields?.count > index {
-                if let textField: UITextField = alertController.textFields![index] as? UITextField {
-                    return textField
+            if #available(iOS 8.0, *) {
+                let uiAlertController = alertController as! UIAlertController
+                if uiAlertController.textFields?.count > index {
+                    if let textField: UITextField = uiAlertController.textFields![index] {
+                        return textField
+                    }
                 }
             }
             return nil
@@ -263,7 +290,7 @@ public class BPCompatibleAlertController : NSObject, UIAlertViewDelegate {
         //  button quickly. (Hard to do, but possible during view controller transitions...)
         // After the first invocation postAlertDismissalActions() will have already removed
         //  all the actions, resulting in a nil action.
-        let action = actions[alertView.buttonTitleAtIndex(buttonIndex)] as BPCompatibleAlertAction?
+        let action = actions[alertView.buttonTitleAtIndex(buttonIndex)!] as BPCompatibleAlertAction?
         if let handler = action?.handler {
             handler(action)
         }

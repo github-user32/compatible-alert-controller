@@ -13,6 +13,7 @@
 		61F82D011A2D30090015066C /* BPCompatibleAlertControllerDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61F82D001A2D30090015066C /* BPCompatibleAlertControllerDemoTests.swift */; };
 		61F82D121A2D34D80015066C /* BPCompatibleAlertAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61F82D101A2D34D80015066C /* BPCompatibleAlertAction.swift */; };
 		61F82D131A2D34D80015066C /* BPCompatibleAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61F82D111A2D34D80015066C /* BPCompatibleAlertController.swift */; };
+		D4C4A9BE1B71B41E00762446 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D4C4A9BD1B71B41E00762446 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,7 @@
 		61F82D001A2D30090015066C /* BPCompatibleAlertControllerDemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPCompatibleAlertControllerDemoTests.swift; sourceTree = "<group>"; };
 		61F82D101A2D34D80015066C /* BPCompatibleAlertAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BPCompatibleAlertAction.swift; sourceTree = "<group>"; };
 		61F82D111A2D34D80015066C /* BPCompatibleAlertController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BPCompatibleAlertController.swift; sourceTree = "<group>"; };
+		D4C4A9BD1B71B41E00762446 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 		61F82CDC1A2D30090015066C = {
 			isa = PBXGroup;
 			children = (
+				D4C4A9BD1B71B41E00762446 /* Default-568h@2x.png */,
 				61F82CE71A2D30090015066C /* BPCompatibleAlertControllerDemo */,
 				61F82CFD1A2D30090015066C /* BPCompatibleAlertControllerDemoTests */,
 				61F82CE61A2D30090015066C /* Products */,
@@ -167,7 +170,8 @@
 		61F82CDD1A2D30090015066C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Bay Phillips";
 				TargetAttributes = {
 					61F82CE41A2D30090015066C = {
@@ -204,6 +208,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				61F82CF21A2D30090015066C /* Images.xcassets in Resources */,
+				D4C4A9BE1B71B41E00762446 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,6 +273,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -335,6 +341,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = CompatibleAlertControllerDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.BayPhillips.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = BPCompatibleAlertControllerDemo;
 			};
 			name = Debug;
@@ -346,6 +353,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = CompatibleAlertControllerDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.BayPhillips.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = BPCompatibleAlertControllerDemo;
 			};
 			name = Release;
@@ -364,6 +372,7 @@
 				);
 				INFOPLIST_FILE = CompatibleAlertControllerDemoTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.BayPhillips.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = BPCompatibleAlertControllerDemoTests;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CompatibleAlertControllerDemo.app/CompatibleAlertControllerDemo";
 			};
@@ -379,6 +388,7 @@
 				);
 				INFOPLIST_FILE = CompatibleAlertControllerDemoTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.BayPhillips.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = BPCompatibleAlertControllerDemoTests;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CompatibleAlertControllerDemo.app/CompatibleAlertControllerDemo";
 			};
