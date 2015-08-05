@@ -1,7 +1,7 @@
 #BPCompatibleAlertController ![Travis CI Build](https://api.travis-ci.org/BayPhillips/compatible-alert-controller.svg)
 iOS 8 included the new UIAlertController which is a much needed upgrade upon the UIAlertView; however, if you're still supporting iOS 7, like most of us are, then you still need to use UIAlertViews.
 
-`BPCompatibleAlertController` does its best to emulate the UIAlertController implementation while supporting both iOS 7 and 8.
+`BPCompatibleAlertController` does its best to emulate the UIAlertController implementation while supporting iOS 7, 8 and 9.
 
 ##How to Use##
 Code samples are provided in the demo project, but if you're familiar with the UIAlertController, then you'll find this easy:
@@ -25,7 +25,7 @@ alertController.addTextFieldWithConfigurationHandler({ (textField) in
     textField.placeholder = "Username"
 })
 ```
-To support the different types of textFields in iOS7, just set the `UIAlertViewStyle` on the `BPCompatibleAlertController` to whichever you'd like, **so long as it matches the number of textFields you're adding.**
+To support the different types of textFields in iOS 7, just set the `UIAlertViewStyle` on the `BPCompatibleAlertController` to whichever you'd like, **so long as it matches the number of textFields you're adding.**
 ```
 UIAlertViewStyle.Default = 0 textFields
 UIAlertViewStyle.PlainTextInput or SecureTextInput = 1 textField
